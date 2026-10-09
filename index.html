@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heart Aerospace — Electrifying regional air travel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --m: 2.78vw;              /* page margin (40px @ 1440) */
+    --ink: #0b0b0c;
+    --paper: #fefefe;
+    --mauve: #7f7d90;
+    --accent: #3d3bd1;
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --display: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 1.18vw;
+    line-height: 1.2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  img, video { display: block; }
+  h1, h2, h3, p { margin: 0; }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 2.6vw var(--m) 0;
+    color: #fff;
+    transition: color .45s ease;
+    pointer-events: none;
+  }
+  .nav.is-dark { color: var(--ink); }
+  .nav a { pointer-events: auto; }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: .55vw;
+    font-weight: 700;
+    font-size: 1.12vw;
+    line-height: .95;
+    letter-spacing: -.02em;
+  }
+  .logo svg { width: 3.5vw; height: auto; fill: currentColor; }
+  .nav-links {
+    display: flex;
+    gap: 2.2vw;
+    padding-top: 1.25vw;
+    font-size: 1.15vw;
+    letter-spacing: -.01em;
+  }
+  .nav-links a { position: relative; transition: opacity .3s ease; }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -.25vw;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform .5s var(--ease);
+  }
+  .nav-links:hover a { opacity: .55; }
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  .nav > * { opacity: 0; transform: translateY(-.6vw); transition: opacity 1s ease .2s, transform 1.2s var(--ease) .2s; }
+  .is-loaded .nav > * { opacity: 1; transform: none; }
+
+  /* ---------- Intro: hero + ES-19 ---------- */
+  .intro { position: relative; background: var(--mauve); }
+  .hero-media {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 100vh;
+    min-height: 56.25vw;
+    overflow: hidden;
+    will-change: transform;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 58%, transparent 100%);
+            mask-image: linear-gradient(to bottom, #000 0, #000 58%, transparent 100%);
+  }
+  .hero-media video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0;
+    opacity: 0;
+    transform: scale(1.06);
+    transition: opacity 1.6s ease, transform 2.4s var(--ease);
+  }
+  .is-loaded .hero-media video { opacity: 1; transform: none; }
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 56.25vw;
+  }
+  .hero-title {
+    position: absolute;
+    left: var(--m);
+    bottom: 2.3vw;
+    color: #fff;
+    font-weight: 700;
+    font-size: 11.25vw;
+    line-height: .98;
+    letter-spacing: -.067em;
+  }
+  .line { display: block; overflow: hidden; padding-bottom: .12em; margin-bottom: -.12em; white-space: nowrap; }
+  .line > span { display: block; transform: translateY(115%); transition: transform 1.4s var(--ease); }
+  .is-loaded .hero-title .line > span,
+  .is-in .line > span { transform: none; }
+  .line:nth-child(2) > span { transition-delay: .09s; }
+  .line:nth-child(3) > span { transition-delay: .18s; }
+  .hero-title .line > span { transition-delay: .35s; }
+  .hero-title .line:nth-child(2) > span { transition-delay: .45s; }
+
+  .model {
+    position: relative;
+    padding-top: 6vw;
+    background: linear-gradient(to bottom,
+      rgba(127,125,144,0) 0,
+      #7f7d90 12vw,
+      #8f8da0 34vw,
+      #b9b8c5 58vw,
+      #e9e9ee 76vw,
+      var(--paper) 90vw);
+  }
+  .model-name {
+    position: sticky;
+    top: 8vw;
+    z-index: 1;
+    margin: 0;
+    padding-left: var(--m);
+    color: var(--paper);
+    font-weight: 700;
+    font-size: 38.4vw;
+    line-height: .8;
+    letter-spacing: -.068em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .plane {
+    position: relative;
+    z-index: 2;
+    width: 98vw;
+    aspect-ratio: 1;
+    margin: -7.8vw auto -4.5vw;
+  }
+  .plane img { width: 100%; height: 100%; object-fit: contain; }
+  .nav-switch { position: absolute; left: 0; top: 30%; width: 1px; height: 1px; }
+
+  .note {
+    position: absolute;
+    font-size: 1.04vw;
+    line-height: 1.08;
+    letter-spacing: -.01em;
+    color: #17171a;
+  }
+  .note i { position: absolute; background: #17171a; transition: transform 1.3s var(--ease); }
+  .note span { position: absolute; white-space: nowrap; opacity: 0; transform: translateY(.5vw); transition: opacity .8s ease .55s, transform 1s var(--ease) .55s; }
+  .note.is-in span { opacity: 1; transform: none; }
+  .note.is-in i { transform: none !important; }
+
+  .note--propulsion { left: 70%; top: 17.5%; width: 0; height: 19%; }
+  .note--propulsion i { left: 0; top: 0; width: 1px; height: 100%; transform: scaleY(0); transform-origin: bottom; }
+  .note--propulsion span { left: 1.25vw; top: 0; }
+
+  .note--aero { left: 3.3%; top: 52%; width: 0; height: 21.5%; }
+  .note--aero i { left: 0; top: 0; width: 1px; height: 100%; transform: scaleY(0); transform-origin: top; }
+  .note--aero span { left: 1.25vw; bottom: 0; }
+
+  .note--airframe { left: 52.5%; top: 70.5%; width: 17%; height: 0; }
+  .note--airframe i { left: 0; top: 0; width: 100%; height: 1px; transform: scaleX(0); transform-origin: left; }
+  .note--airframe span { left: calc(100% + 1.25vw); top: -.55vw; }
+
+  /* ---------- Statement ---------- */
+  .statement { padding: 6vw var(--m) 11.5vw; background: var(--paper); position: relative; z-index: 3; }
+  .statement h2 {
+    font-weight: 700;
+    font-size: 5.55vw;
+    line-height: 1.01;
+    letter-spacing: -.063em;
+  }
+
+  /* ---------- Features ---------- */
+  .features {
+    display: grid;
+    grid-template-columns: 32.1vw 31.9vw 1fr;
+    padding: 0 var(--m) 11vw;
+    background: var(--paper);
+  }
+  .views { display: flex; flex-direction: column; gap: 3.4vw; width: 20vw; padding: 1.6vw 0 0 .6vw; }
+  .view { position: relative; width: 100%; overflow: hidden; }
+  .view img { position: absolute; left: 0; top: 0; width: 100%; height: auto; }
+  .view--side  { aspect-ratio: 1792 / 520; }
+  .view--side img  { transform: translateY(-5.6%); }
+  .view--front { aspect-ratio: 1792 / 500; }
+  .view--front img { transform: translateY(-38.8%); }
+  .view--rear  { aspect-ratio: 1792 / 560; }
+  .view--rear img  { transform: translateY(-70.6%); }
+
+  .feature + .feature { margin-top: 5.8vw; }
+  .feature .eyebrow { display: block; font-size: 1.04vw; color: var(--accent); margin-bottom: 1vw; }
+  .feature h3 {
+    font-weight: 700;
+    font-size: 3.25vw;
+    line-height: .98;
+    letter-spacing: -.06em;
+  }
+  .feature p { margin-top: 4.3vw; max-width: 29.6vw; font-size: 1.16vw; line-height: 1.22; letter-spacing: -.005em; }
+
+  .reveal { opacity: .18; transform: translateY(1.6vw); transition: opacity 1.1s ease, transform 1.4s var(--ease); }
+  .reveal.is-in { opacity: 1; transform: none; }
+  .reveal[data-d="1"] { transition-delay: .1s; }
+  .reveal[data-d="2"] { transition-delay: .2s; }
+  .reveal[data-d="3"] { transition-delay: .3s; }
+
+  /* ---------- Sunset band ---------- */
+  .band { position: relative; height: 108vh; min-height: 62vw; overflow: hidden; background: #3f62a8; }
+  .band img {
+    position: absolute;
+    left: 0; top: -14%;
+    width: 100%; height: 128%;
+    object-fit: cover;
+    will-change: transform;
+  }
+
+  /* ---------- Partners ---------- */
+  .partners { padding: 3.5vw var(--m) 4.4vw; background: var(--paper); }
+  .partners h4 { margin: 0 0 2.6vw; font-size: 1.15vw; font-weight: 700; letter-spacing: -.02em; }
+  .partner-grid { display: grid; grid-template-columns: repeat(5, 1fr); row-gap: 1.4vw; }
+  .partner {
+    height: 7.8vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #222;
+    text-align: center;
+    filter: grayscale(1);
+    transition: opacity .4s ease;
+  }
+  .partner-grid:hover .partner { opacity: .4; }
+  .partner-grid .partner:hover { opacity: 1; }
+  .wm { display: inline-block; line-height: 1; }
+  .wm small { display: block; }
+  .wm--be { font-size: 1.15vw; font-weight: 500; text-align: left; letter-spacing: -.01em; }
+  .wm--be small { font-size: .7vw; margin-top: .15vw; color: #666; }
+  .wm--ua { font-size: 1.5vw; font-weight: 700; letter-spacing: .2em; line-height: 1.05; }
+  .wm--mesa { font-family: "Playfair Display", serif; font-size: 2.6vw; letter-spacing: -.02em; color: #9a9a9a; line-height: .8; }
+  .wm--mesa small { font-family: var(--display); font-weight: 400; font-size: 2vw; letter-spacing: -.03em; color: #c4c4c4; }
+  .wm--eqt { font-size: 1.5vw; font-weight: 400; letter-spacing: .34em; line-height: 1.15; color: #555; }
+  .wm--lc { font-family: "Playfair Display", serif; font-size: 1.4vw; letter-spacing: .06em; color: #555; }
+  .wm--lc small { font-size: .62vw; letter-spacing: .3em; margin-top: .35vw; }
+  .wm--nor { font-family: "JetBrains Mono", monospace; font-size: 2.1vw; letter-spacing: -.02em; }
+  .wm--vin { font-size: 2.1vw; font-weight: 500; letter-spacing: .12em; transform: scaleX(1.25); }
+  .wm--ni { font-size: 1.55vw; font-weight: 500; text-align: left; line-height: 1.02; }
+  .wm--yc { font-size: 1.75vw; font-weight: 400; letter-spacing: -.01em; }
+  .wm--ec { font-size: .95vw; font-weight: 600; line-height: 1.1; color: #444; }
+
+  /* ---------- Footer ---------- */
+  .footer { background: #000; color: #fff; padding: 3.4vw var(--m) 2.2vw; min-height: 32vw; display: flex; flex-direction: column; justify-content: space-between; }
+  .footer-cols, .footer-base { display: grid; grid-template-columns: repeat(4, 23.96vw); font-size: 1.15vw; line-height: 1.26; letter-spacing: -.01em; }
+  .footer h5 { margin: 0 0 1.2vw; font-size: inherit; font-weight: 700; line-height: 1.2; }
+  .footer ul { list-style: none; margin: 0; padding: 0; }
+  .footer li a { transition: opacity .3s ease; }
+  .footer li a:hover { opacity: .55; }
+  .footer-base { align-items: center; }
+  .footer-base .copy { grid-column: 3; }
+
+  /* ---------- Small screens ---------- */
+  @media (max-width: 760px) {
+    body { font-size: 15px; }
+    :root { --m: 20px; }
+    .nav { padding-top: 18px; }
+    .logo { font-size: 13px; gap: 6px; }
+    .logo svg { width: 34px; }
+    .nav-links { gap: 14px; font-size: 12px; padding-top: 10px; }
+    .nav-links a:nth-child(n+4) { display: none; }
+    .hero-title { bottom: 28px; }
+    .note { font-size: 10px; }
+    .statement { padding-top: 60px; padding-bottom: 80px; }
+    .features { grid-template-columns: 1fr; row-gap: 56px; padding-bottom: 80px; }
+    .views { width: 60vw; gap: 28px; padding: 0; }
+    .feature + .feature { margin-top: 0; }
+    .feature .eyebrow { font-size: 13px; margin-bottom: 8px; }
+    .feature h3 { font-size: 34px; }
+    .feature p { font-size: 15px; max-width: none; margin-top: 22px; }
+    .band { height: 70vh; }
+    .partners h4 { font-size: 14px; margin-bottom: 20px; }
+    .partner-grid { grid-template-columns: repeat(2, 1fr); }
+    .partner { height: 84px; zoom: 3.2; }
+    .footer { min-height: 0; gap: 70px; padding: 36px var(--m) 28px; }
+    .footer-cols { grid-template-columns: 1fr 1fr; row-gap: 32px; font-size: 14px; }
+    .footer-base { grid-template-columns: 1fr 1fr; font-size: 14px; }
+    .footer-base .copy { grid-column: 2; }
+    .footer h5 { margin-bottom: 10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; transition-delay: 0s !important; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a class="logo" href="#" aria-label="Heart Aerospace">
+    <svg viewBox="0 0 56 40" aria-hidden="true"><path d="M2 2 30 17 54 13 30 24 14 38 17 22Z"/></svg>
+    <span>Heart<br>Aerospace</span>
+  </a>
+  <nav class="nav-links">
+    <a href="#">Company</a>
+    <a href="#">FAQ</a>
+    <a href="#">Careers</a>
+    <a href="#">Newsroom</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="intro">
+    <div class="hero-media" id="heroMedia">
+      <video autoplay muted loop playsinline preload="auto"
+        poster="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_083847_7fea00f7-6bd7-454d-8411-ff561f81a0e4.png"
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_084033_ef71d52d-6360-4ee3-b513-6cc0944bddfd.mp4"></video>
+    </div>
+
+    <div class="hero">
+      <h1 class="hero-title">
+        <span class="line"><span>Electrifying regional</span></span>
+        <span class="line"><span>air travel</span></span>
+      </h1>
+    </div>
+
+    <div class="model">
+      <p class="model-name" aria-hidden="true">ES-19</p>
+      <div class="plane">
+        <span class="nav-switch" id="navSwitch"></span>
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_084012_3d7d854f-1101-4ea2-a31d-4458b3a0813c.png" alt="ES-19 electric airliner seen from above">
+        <div class="note note--propulsion" data-io><i></i><span>Modular all-electric<br>propulsion system</span></div>
+        <div class="note note--aero" data-io><i></i><span>Aerodynamic<br>optimized design</span></div>
+        <div class="note note--airframe" data-io><i></i><span>Lightweight<br>aluminum airframe</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="statement">
+    <h2 data-io>
+      <span class="line"><span>Heart Aerospace will deliver the first</span></span>
+      <span class="line"><span>ES-19 electric airliner certified for</span></span>
+      <span class="line"><span>commercial flight by 2026</span></span>
+    </h2>
+  </section>
+
+  <section class="features">
+    <div class="views">
+      <div class="view view--side reveal" data-io><img src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_084015_91538a37-a738-4f67-86e6-479143e51d5b.png" alt="ES-19 side view"></div>
+      <div class="view view--front reveal" data-io data-d="1"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_084015_91538a37-a738-4f67-86e6-479143e51d5b.png" alt="ES-19 front view"></div>
+      <div class="view view--rear reveal" data-io data-d="2"><img src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_084015_91538a37-a738-4f67-86e6-479143e51d5b.png" alt="ES-19 rear view"></div>
+    </div>
+
+    <div>
+      <article class="feature reveal" data-io data-d="1">
+        <span class="eyebrow">Green</span>
+        <h3>Zero<br>Operational<br>Emissions</h3>
+        <p>Aviation produces roughly 2% of the world's CO2 today, a share projected to climb to 12-27% by 2050. Around 40% of those emissions come from short-haul routes, which is exactly where electric aircraft fit. They fly with no operational emissions and need the lightest infrastructure of any regional transport mode.</p>
+      </article>
+      <article class="feature reveal" data-io>
+        <span class="eyebrow">Cost-Effective</span>
+        <h3>75% cost savings<br>in fuel and 50%<br>in maintenance</h3>
+        <p>Going electric rewrites the economics of regional flying. Electric aircraft cost less to buy, run and service. Simple, dependable electric motors cut maintenance costs by about 90% versus turboprops, smart electronic monitoring means fewer inspections, and fuel costs fall by 50-75%.</p>
+      </article>
+    </div>
+
+    <div>
+      <article class="feature reveal" data-io data-d="2">
+        <span class="eyebrow">Accessible</span>
+        <h3>Reduced<br>door-to-door<br>travel times</h3>
+        <p>Flying should connect our towns and communities, not sit apart from them. A quiet, emission-free aircraft that needs only a 750m runway opens up the vast network of small airfields located close to city centres.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="band" id="band">
+    <img src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20261008_083856_939120d8-ec80-48b3-a34b-dec19be45401.png" alt="ES-19 banking above the clouds at sunset">
+  </section>
+
+  <section class="partners">
+    <h4>Partners &amp; Investors</h4>
+    <div class="partner-grid">
+      <div class="partner reveal" data-io><span class="wm wm--be">Breakthrough Energy<small>Ventures</small></span></div>
+      <div class="partner reveal" data-io data-d="1"><span class="wm wm--ua">UNITED<br>AIRLINES</span></div>
+      <div class="partner reveal" data-io data-d="1"><span class="wm wm--mesa">MESA<small>AIRLINES</small></span></div>
+      <div class="partner reveal" data-io data-d="2"><span class="wm wm--eqt">EQT<br>VENTURES</span></div>
+      <div class="partner reveal" data-io data-d="2"><span class="wm wm--lc">LOWERCARBON<small>CAPITAL</small></span></div>
+      <div class="partner reveal" data-io><span class="wm wm--nor">&lt;norrsken&gt;</span></div>
+      <div class="partner reveal" data-io data-d="1"><span class="wm wm--vin">VINNOVA</span></div>
+      <div class="partner reveal" data-io data-d="1"><span class="wm wm--ni">Nordic<br>Innovation</span></div>
+      <div class="partner reveal" data-io data-d="2"><span class="wm wm--yc">Y Combinator</span></div>
+      <div class="partner reveal" data-io data-d="2"><span class="wm wm--ec">European<br>Commission</span></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-cols">
+    <div>
+      <h5>Navigation</h5>
+      <ul>
+        <li><a href="#">Company</a></li>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Newsroom</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Follow</h5>
+      <ul>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Twitter</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Heart Aerospace<br>Headquarters</h5>
+      <ul>
+        <li>Fredsflottiljens Väg 19</li>
+        <li>417 46 Göteborg</li>
+      </ul>
+    </div>
+    <div>
+      <h5>US Legal<br>Address</h5>
+      <ul>
+        <li>470 Ramona St</li>
+        <li>Palo Alto, 943 01, CA</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-base">
+    <a class="logo" href="#" aria-label="Heart Aerospace">
+      <svg viewBox="0 0 56 40" aria-hidden="true"><path d="M2 2 30 17 54 13 30 24 14 38 17 22Z"/></svg>
+      <span>Heart<br>Aerospace</span>
+    </a>
+    <span class="copy">© 2022 Heart Aerospace</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var nav = document.getElementById('nav');
+  var navSwitch = document.getElementById('navSwitch');
+  var heroMedia = document.getElementById('heroMedia');
+  var band = document.getElementById('band');
+  var bandImg = band.querySelector('img');
+  var video = heroMedia.querySelector('video');
+
+  // entrance
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { root.classList.add('is-loaded'); });
+  });
+  var p = video.play();
+  if (p && p.catch) p.catch(function () {});
+
+  // scroll-triggered reveals (line masks, annotations, fades)
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -14% 0px', threshold: 0.01 });
+  document.querySelectorAll('[data-io]').forEach(function (el) { io.observe(el); });
+
+  // eased scroll value drives parallax
+  var target = window.scrollY, current = target, ticking = false;
+  function frame() {
+    current += (target - current) * 0.12;
+    if (Math.abs(target - current) < 0.1) current = target;
+    var vh = window.innerHeight;
+
+    // hero video drifts slightly slower than the page
+    if (current < vh * 1.6) {
+      heroMedia.style.transform = 'translate3d(0,' + (current * 0.14).toFixed(2) + 'px,0)';
+    }
+
+    // sunset band: image travels inside its frame
+    var r = band.getBoundingClientRect();
+    if (r.bottom > 0 && r.top < vh) {
+      var prog = (vh - r.top) / (vh + r.height);       // 0 → 1 through the viewport
+      bandImg.style.transform = 'translate3d(0,' + ((prog - 0.5) * 20).toFixed(2) + '%,0)';
+    }
+
+    // nav turns dark once the background goes light
+    nav.classList.toggle('is-dark', navSwitch.getBoundingClientRect().top < nav.offsetHeight);
+
+    if (current !== target) requestAnimationFrame(frame); else ticking = false;
+  }
+  function onScroll() {
+    target = window.scrollY;
+    if (!ticking) { ticking = true; requestAnimationFrame(frame); }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  onScroll();
+})();
+</script>
+</body>
+</html>
